@@ -1,9 +1,9 @@
-import type { Metadata } from "next";
-import "./globals.css";
+import type { Metadata } from 'next';
+import './globals.css';
 
 export const metadata: Metadata = {
-  title: "Organic Foods Marketplace",
-  description: "Simple online marketplace for organic foods",
+  title: 'Organic Foods Marketplace',
+  description: 'Simple online marketplace for organic foods',
 };
 
 export default function RootLayout({
@@ -13,9 +13,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body>
-        {children}
-      </body>
+      <body className="bg-background">{children}</body>
     </html>
   );
 }
