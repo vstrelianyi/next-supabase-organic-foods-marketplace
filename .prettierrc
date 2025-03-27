@@ -1,0 +1,21 @@
+{
+  "printWidth": 150,
+  "tabWidth": 2,
+  "semi": true,
+  "trailingComma": "es5",
+  "singleQuote": true,
+  "useTabs": false,
+  "bracketSameLine": false,
+  "jsxSingleQuote": false,
+  "arrowParens": "always",
+  "endOfLine": "auto",
+  "htmlWhitespaceSensitivity": "strict",
+  "jsxIndentStyle": "space",
+  "bracketSpacing": true,
+  "singleAttributePerLine": true,
+  "spaceBeforeFunctionParen": true,
+  "spaceInParens": true,
+  "spaceInfixOps": true,
+  "jsxExpressionSpacing": true,
+  "jsxWhitespace": true
+}
