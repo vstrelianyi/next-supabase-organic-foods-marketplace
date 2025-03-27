@@ -1,10 +1,26 @@
 /* https://dizzy.systems/editor/dashboard */
 /* https://ipalettes.com/theme/shadcn */
 
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap');
+
 @import 'tailwindcss';
 @import 'tw-animate-css';
 
+* {
+  box-sizing: border-box;
+  font-family: 'Montserrat', sans-serif;
+}
+
+html {
+  font-size: 20px;
+}
+
 @theme {
+  --breakpoint-sm: 640px;
+  --breakpoint-md: 768px;
+  --breakpoint-lg: 1024px;
+  --breakpoint-xl: 1280px;
+
   --color-background: hsl(149.1 50% 95%);
   --color-foreground: hsl(149.1 2.5% 7.5%);
   --color-card: hsl(149.1 25% 95%);
