@@ -16,7 +16,7 @@ export default async function PageUserShop() {
   const userName = `${ user?.firstName ?? ''} ${user?.lastName ?? ''}`;
 
   const supabaseUserResponse = await getCurrentUserFromSupabase();
-  console.log( 'PageUserShop -> supabaseUserResponse:', supabaseUserResponse );
+  // console.log( 'PageUserShop -> supabaseUserResponse:', supabaseUserResponse );
   return (
     <div>
       <h1>
