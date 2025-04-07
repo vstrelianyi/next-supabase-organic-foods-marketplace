@@ -10,6 +10,8 @@ import {
 } from '@clerk/nextjs';
 
 import { Roboto, } from 'next/font/google';
+import LayoutCustom from '@/layout-provider';
+import { Toaster, } from 'react-hot-toast';
 const roboto = Roboto ( {
   weight: [ '300', '400', '600', '700', ],
   style: [ 'normal', 'italic', ],
@@ -34,7 +36,13 @@ export default function RootLayout( {
         className={ roboto.className }
       >
         <body className="bg-background layout-main">
-          { children }
+          <LayoutCustom>
+            { children }
+          </LayoutCustom>
+          <Toaster
+            position="top-center"
+            reverseOrder={ false }
+          />
         </body>
       </html>
     </ClerkProvider>

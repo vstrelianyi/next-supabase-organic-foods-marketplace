@@ -26,6 +26,11 @@ const eslintConfig = [
     extends: [ 'next/core-web-vitals', 'next/typescript', ],
     rules: {
       // jsx style formatting
+      'space-infix-ops': [ 'error', { 'int32Hint': false, }, ],
+      'arrow-spacing': [ 'error', {
+        'before': true,
+        'after': true,
+      }, ],
       '@stylistic/semi': 'error',
       'semi-spacing': [ 'error', {
         'before': false,
@@ -41,7 +46,7 @@ const eslintConfig = [
       }, ],
       '@stylistic/jsx-one-expression-per-line': 'error',
       '@stylistic/max-len': [ 'error', {
-        code: 190,
+        code: 220,
         tabWidth: 2,
         ignoreStrings: true,
         ignoreTemplateLiterals: false,
@@ -57,6 +62,15 @@ const eslintConfig = [
       '@stylistic/jsx-max-props-per-line': [ 2, {
         'maximum': 1,
         'when': 'always',
+      }, ],
+      'react/jsx-wrap-multilines': [ 'error', {
+        'declaration': 'parens',
+        'assignment': 'parens',
+        'return': 'parens',
+        'arrow': 'parens',
+        'condition': 'parens',
+        'logical': 'parens',
+        'prop': 'parens',
       }, ],
 
       // vars

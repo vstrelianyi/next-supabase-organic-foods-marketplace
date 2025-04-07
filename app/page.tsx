@@ -8,7 +8,6 @@ import React, { useState, } from 'react';
 import {
   Sheet,
   SheetContent,
-  SheetFooter,
   SheetHeader,
   SheetTitle,
 } from '@/components/ui/sheet';
@@ -105,7 +104,7 @@ function PageHome() {
                 routing="hash"
                 signInUrl="/?formType=signIn"
               />
-            ) :(
+            ) : (
               <SignIn
                 routing="hash"
                 signUpUrl="/?formType=signUp"

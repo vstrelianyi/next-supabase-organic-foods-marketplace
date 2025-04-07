@@ -15,7 +15,7 @@ export default async function PageUserShop() {
   const userEmail = user?.emailAddresses[ 0 ]?.emailAddress;
   const userName = `${ user?.firstName ?? ''} ${user?.lastName ?? ''}`;
 
-  const supabaseUserResponse = await getCurrentUserFromSupabase();
+  // const supabaseUserResponse = await getCurrentUserFromSupabase();
   // console.log( 'PageUserShop -> supabaseUserResponse:', supabaseUserResponse );
   return (
     <div>

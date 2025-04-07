@@ -4,10 +4,11 @@ import supabase from '@/config/supabase';
 import { currentUser, } from '@clerk/nextjs/server';
 
 export const saveClerkUserToSupabase = async ( clerkUser: any ) => {
+  console.log( 'saveClerkUserToSupabase -> clerkUser:', clerkUser );
   try {
     const supabaseUserObj = {
-      name: `${clerkUser.firtName} ${clerkUser.lastName}`,
-      email: clerkUser.emailAddress,
+      name: `${clerkUser.firstName} ${clerkUser.lastName}`,
+      email: clerkUser.emailAddresses[ 0 ]?.emailAddress,
       clerk_user_id: clerkUser.id,
       profile_pic: clerkUser.imageUrl || '',
       is_admin: false,
@@ -34,7 +35,7 @@ export const saveClerkUserToSupabase = async ( clerkUser: any ) => {
   }
 };
 
-export const getCurrentUserFromSupabase = async()=>{
+export const getCurrentUserFromSupabase = async() => {
   try {
     const clerkUser = await currentUser();
 
