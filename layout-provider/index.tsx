@@ -1,7 +1,6 @@
 'use client';
 
 import { usePathname, } from 'next/navigation';
-import React from 'react';
 
 // COMPONENTS
 import LayoutPrivate from './layout-private';

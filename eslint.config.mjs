@@ -2,6 +2,7 @@ import { dirname, } from 'path';
 import { fileURLToPath, } from 'url';
 import { FlatCompat, } from '@eslint/eslintrc';
 import stylistic from '@stylistic/eslint-plugin';
+import customPlugin from './rules/object-max-pairs-per-line.js';
 const __filename = fileURLToPath( import.meta.url );
 const __dirname = dirname( __filename );
 const compat = new FlatCompat( {
@@ -13,6 +14,7 @@ const eslintConfig = [
   {
     plugins: {
       '@stylistic': stylistic,
+      'custom': customPlugin,
     },
   },
   {
@@ -37,6 +39,14 @@ const eslintConfig = [
         'after': false,
       }, ],
       '@stylistic/no-extra-semi': 'error',
+      '@stylistic/arrow-parens': [ 'error', 'always', ],
+      '@stylistic/type-annotation-spacing': [
+        'error',
+        {
+          'before': true,
+          'after': true,
+        },
+      ],
       '@stylistic/indent': [ 'error', 2, ],
       '@stylistic/quotes': [ 'error', 'single', ],
       '@stylistic/jsx-quotes': [ 'error', 'prefer-double', ],
@@ -44,7 +54,8 @@ const eslintConfig = [
         'nonEmpty': 'tag-aligned',
         'selfClosing': 'tag-aligned',
       }, ],
-      '@stylistic/jsx-one-expression-per-line': 'error',
+      // '@stylistic/jsx-one-expression-per-line': 'error',
+      // 'custom/object-max-pairs-per-line': 'error',
       '@stylistic/max-len': [ 'error', {
         code: 220,
         tabWidth: 2,
@@ -59,7 +70,7 @@ const eslintConfig = [
         },
       ],
       'react/jsx-first-prop-new-line': [ 1, 'multiline', ],
-      '@stylistic/jsx-max-props-per-line': [ 2, {
+      '@stylistic/jsx-max-props-per-line': [ 'error', {
         'maximum': 1,
         'when': 'always',
       }, ],

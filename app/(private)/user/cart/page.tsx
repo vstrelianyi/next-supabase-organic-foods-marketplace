@@ -1,7 +1,6 @@
 'use client';
 
 import usersStore, { IUsersStore, } from '@/store/store-users';
-import React from 'react';
 
 function PageUserCart() {
   const { user, setUser, } = usersStore() as IUsersStore;
