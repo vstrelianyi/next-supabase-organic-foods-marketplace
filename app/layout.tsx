@@ -19,15 +19,15 @@ const roboto = Roboto ( {
   display: 'swap',
 } );
 
-export const metadata: Metadata = {
+export const metadata : Metadata = {
   title: 'Organic Foods Marketplace',
   description: 'Simple online marketplace for organic foods',
 };
 
 export default function RootLayout( {
   children,
-}: Readonly<{
-  children: React.ReactNode;
+} : Readonly<{
+  children : React.ReactNode;
 }> ) {
   return (
     <ClerkProvider>

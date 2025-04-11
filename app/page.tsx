@@ -43,7 +43,10 @@ function PageHome() {
     <div className="flex flex-col gap-1 items-stretch justify-start h-screen p-[20px]">
       <div className="flex flex-wrap lg:flex-nowrap justify-between items-center">
         <h1 className="text-2xl font-bold text-ring">
-          Organic Foods Marketplace
+          <Link
+            href="/"
+            className="hover:text-accent"
+          >Organic Foods Marketplace</Link>
         </h1>
         <div className="flex items-center gap-4 py-2 grow justify-around lg:justify-end">
           { menuItems.map( ( item ) => (

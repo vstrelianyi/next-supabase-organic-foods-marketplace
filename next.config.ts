@@ -1,14 +1,14 @@
 import type { NextConfig, } from 'next';
 
-const nextConfig: NextConfig = {
+const nextConfig : NextConfig = {
   /* config options here */
-  experimental: {
-    allowedDevOrigins: [
-      'localhost:3000',
-      '127.0.0.1:3000',
-    ],
-  },
+  experimental: {},
+  allowedDevOrigins: [
+    'localhost:3000',
+    '127.0.0.1:3000',
+  ],
   images: {
+
     remotePatterns: [
       {
         protocol: 'https',
@@ -21,6 +21,10 @@ const nextConfig: NextConfig = {
       {
         protocol: 'https',
         hostname: 'img.clerk.com',
+      },
+      {
+        protocol: 'https',
+        hostname: 'sypzttnhqtqzxuhbrhae.supabase.co',
       },
     ],
   },

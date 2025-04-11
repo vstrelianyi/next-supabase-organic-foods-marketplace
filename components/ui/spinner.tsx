@@ -1,11 +1,13 @@
+'use client';
+
 import clsx from 'clsx';
 import { motion, } from 'framer-motion';
 
 interface ISpinnerProps{
-  height?: number;
+  height ?: number;
 }
 
-function Spinner( { height, }: ISpinnerProps ) {
+function Spinner( { height, } : ISpinnerProps ) {
   return (
     <div
       className={ clsx(

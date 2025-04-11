@@ -1,8 +1,10 @@
 import { dirname, } from 'path';
 import { fileURLToPath, } from 'url';
+
 import { FlatCompat, } from '@eslint/eslintrc';
 import stylistic from '@stylistic/eslint-plugin';
-import customPlugin from './rules/object-max-pairs-per-line.js';
+import importPlugin from 'eslint-plugin-import';
+// import customPlugin from './rules/object-max-pairs-per-line.js';
 const __filename = fileURLToPath( import.meta.url );
 const __dirname = dirname( __filename );
 const compat = new FlatCompat( {
@@ -14,7 +16,8 @@ const eslintConfig = [
   {
     plugins: {
       '@stylistic': stylistic,
-      'custom': customPlugin,
+      'import': importPlugin,
+      // 'custom': customPlugin,
     },
   },
   {
@@ -27,7 +30,19 @@ const eslintConfig = [
   ...compat.config( {
     extends: [ 'next/core-web-vitals', 'next/typescript', ],
     rules: {
+      // Import sorting rules
+      'import/order': [ 'error', {
+        'groups': [ 'builtin', 'external', 'internal', 'parent', 'sibling', 'index', ],
+        'newlines-between': 'always',
+        'alphabetize': {
+          'order': 'asc',
+          'caseInsensitive': true,
+        },
+      }, ],
       // jsx style formatting
+      'space-before-blocks': [ 'error', 'always', ],
+      'keyword-spacing': [ 'error', { 'after': true, }, ],
+
       'space-infix-ops': [ 'error', { 'int32Hint': false, }, ],
       'arrow-spacing': [ 'error', {
         'before': true,
@@ -50,6 +65,7 @@ const eslintConfig = [
       '@stylistic/indent': [ 'error', 2, ],
       '@stylistic/quotes': [ 'error', 'single', ],
       '@stylistic/jsx-quotes': [ 'error', 'prefer-double', ],
+      '@stylistic/newline-per-chained-call': [ 'error', { ignoreChainWithDepth: 2, }, ],
       '@stylistic/jsx-closing-bracket-location': [ 2, {
         'nonEmpty': 'tag-aligned',
         'selfClosing': 'tag-aligned',

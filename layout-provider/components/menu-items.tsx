@@ -20,11 +20,11 @@ import toast from 'react-hot-toast';
 import { useRouter, } from 'next/navigation';
 
 interface IMenuItems{
-  openMenuItems: boolean;
-  setOpenMenuItems: React.Dispatch<React.SetStateAction<boolean>>;
+  openMenuItems : boolean;
+  setOpenMenuItems : React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-function MenuItems( { openMenuItems, setOpenMenuItems, }: IMenuItems ) {
+function MenuItems( { openMenuItems, setOpenMenuItems, } : IMenuItems ) {
   const router = useRouter();
   const [ selectedRole, setSelectedRole, ] = useState( 'user' );
   const [ loading, setLoading, ] = useState( false );
@@ -38,7 +38,7 @@ function MenuItems( { openMenuItems, setOpenMenuItems, }: IMenuItems ) {
     } catch ( error ) {
       toast.error( 'Failed to sign out' );
       console.log( error );
-    } finally{
+    } finally {
       setLoading( false );
     }
   };
@@ -155,8 +155,8 @@ function MenuItems( { openMenuItems, setOpenMenuItems, }: IMenuItems ) {
               defaultValue="user"
               onValueChange={ ( value ) => { setSelectedRole( value ); } }
             >
-              { userRoles.map( item => {
-                return(
+              { userRoles.map( ( item ) => {
+                return (
                   <div
                     className="flex items-center space-x-2"
                     key={ item.value }
@@ -177,8 +177,8 @@ function MenuItems( { openMenuItems, setOpenMenuItems, }: IMenuItems ) {
               } ) }
             </RadioGroup>
 
-            { manuItemsToRender.map( item => {
-              return(
+            { manuItemsToRender.map( ( item ) => {
+              return (
                 <Link
                   key={ item?.route }
                   href={ item?.route }

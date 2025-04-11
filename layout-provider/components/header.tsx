@@ -2,6 +2,7 @@ import { IUser, } from '@/interfaces';
 import { Menu as IconMenu, } from 'lucide-react';
 import React, { useState, } from 'react';
 import MenuItems from './menu-items';
+import Link from 'next/link';
 // import Image from 'next/image';
 
 function Header( { user, } : { user: IUser } ) {
@@ -17,7 +18,7 @@ function Header( { user, } : { user: IUser } ) {
           className="rounded-full"
         /> */ }
       <h1 className="text-2xl font-bold text-ring">
-        Organic Foods Marketplace
+			<Link href="/" className="hover:text-accent">Organic Foods Marketplace</Link>
       </h1>
 
       <div className="text-sm text-white flex items-center">

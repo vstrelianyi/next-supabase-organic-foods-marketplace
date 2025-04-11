@@ -1,10 +1,17 @@
 'use client';
 
 import { zodResolver, } from '@hookform/resolvers/zod';
-import { useForm, } from 'react-hook-form';
-import { z, } from 'zod';
+import { Description, } from '@radix-ui/react-dialog';
+import { X, } from 'lucide-react';
 import Image from 'next/image';
+import Link from 'next/link';
+import { useRouter, } from 'next/navigation';
+import { useMemo, useState, } from 'react';
+import { useForm, } from 'react-hook-form';
+import toast from 'react-hot-toast';
+import { z, } from 'zod';
 
+import { addNewProduct, editProductById, } from '@/actions/products';
 import { Button, } from '@/components/ui/button';
 import {
   Form,
@@ -16,9 +23,6 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import { Input, } from '@/components/ui/input';
-import { Description, } from '@radix-ui/react-dialog';
-import { Textarea, } from '@/components/ui/textarea';
-
 import {
   Select,
   SelectContent,
@@ -26,13 +30,15 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-
+import { Textarea, } from '@/components/ui/textarea';
 import { productCategories, } from '@/constants/index';
-import { useMemo, useState, } from 'react';
+import usersStore, { IUsersStore, } from '@/store/store-users';
+import { uploadFileAndGetUrl, } from '@/utils/file-uploads';
 
 interface TFormProduct{
   formType ?: 'add' | 'edit'
   initialValues ?: {
+    id ?: string,
     name ?: string,
     description ?: string,
     price ?: number,
@@ -43,7 +49,12 @@ interface TFormProduct{
 }
 
 function FormProduct( { formType = 'add', initialValues = {}, } : TFormProduct ) {
+  const { user, } = usersStore() as IUsersStore;
+  const router = useRouter();
   const [ selectedFiles, setSelectedFiles, ] = useState<any[]>( [] );
+  const [ existingProductImages, setExistingProductImages, ] = useState<any[]>( initialValues?.images || [] );
+  const [ loading, setLoading, ] = useState<boolean>( false );
+
   const formSchemaProduct = z.object( {
     name: z.string().nonempty(),
     description: z.string().nonempty(),
@@ -62,22 +73,78 @@ function FormProduct( { formType = 'add', initialValues = {}, } : TFormProduct )
     },
   } );
 
-  function onSubmit( values : z.infer<typeof formSchemaProduct> ) {
-    // Do something with the form values.
-    // ✅ This will be type-safe and validated.
-    console.log( values );
+  async function onSubmit( values : z.infer<typeof formSchemaProduct> ) {
+    try {
+      setLoading( true );
+      const urls = [ ...existingProductImages, ];
+      for ( const file of selectedFiles ) {
+        const response = await uploadFileAndGetUrl( file );
+        if ( response.success ) {
+          urls.push( response.url );
+        } else {
+          throw new Error( response.message );
+        }
+      }
+
+      const payload = {
+        ...values,
+        images: urls,
+        seller_id: user?.id,
+      };
+
+      let response : any = null;
+
+      if ( formType === 'add' ) {
+        response = await addNewProduct( payload );
+      }
+      if ( formType === 'edit' ) {
+        response = await editProductById( initialValues.id || '', payload );
+      }
+
+      if ( !response.success ) {
+        throw new Error( response.message );
+      } else {
+        toast.success( response.message );
+        router.push( '/seller/products' );
+      }
+    } catch ( error ) {
+      console.log( error );
+      toast.error( 'Error submitting form data' );
+    } finally {
+      setLoading( false );
+    }
   }
 
   const imageUrlsToDisplay = useMemo( () => {
     const urls : any = [];
-    if ( selectedFiles.length === 0 ){
+    if ( selectedFiles.length === 0 ) {
       return urls;
     }
 
     selectedFiles.forEach( ( file ) => {
       urls.push( URL.createObjectURL( file ) );
     } );
+
+    return urls;
   }, [ selectedFiles, ] );
+
+  const onSelectedImageDelete = ( index : number ) => {
+    try {
+      const filteredFiles = selectedFiles.filter( ( _, i : number ) => i !== index );
+      setSelectedFiles( filteredFiles );
+    } catch ( error ) {
+      toast.error( 'Error deleting image' );
+    }
+  };
+
+  const onExistingImageDelete = ( index : number ) => {
+    try {
+      const filteredImages = existingProductImages.filter( ( _, i : number ) => i !== index );
+      setExistingProductImages( filteredImages );
+    } catch ( error ) {
+      toast.error( 'Error deleting image' );
+    }
+  };
 
   return (
     <Form { ...form }>
@@ -164,6 +231,7 @@ function FormProduct( { formType = 'add', initialValues = {}, } : TFormProduct )
                 <Input
                   placeholder="Enter product price"
                   { ...field }
+                  type="number"
                   value={ field.value }
                   onChange={ ( e ) => {
                     field.onChange( parseFloat( e.target.value ) );
@@ -185,10 +253,12 @@ function FormProduct( { formType = 'add', initialValues = {}, } : TFormProduct )
               </FormLabel>
               <FormControl>
                 <Input
-                  placeholder="Enter product stock"
                   { ...field }
+                  placeholder="Enter product stock"
                   value={ field.value }
+                  type="number"
                   onChange={ ( e ) => {
+                    console.log( e.target.value );
                     field.onChange( parseFloat( e.target.value ) );
                   } }
                 />
@@ -203,28 +273,92 @@ function FormProduct( { formType = 'add', initialValues = {}, } : TFormProduct )
           placeholder="Select product images"
           type="file"
           multiple
-          onChange={ ( e : any ) => setSelectedFiles( Array.from( e.target.files ) ) }
+          onChange={ ( e : any ) => {
+            const filesArr = Array.from( e.target.files );
+            setSelectedFiles( filesArr );
+          } }
         />
 
-        <div className="flex gap-5">
-          { imageUrlsToDisplay.map( ( url : any, index : number ) => {
-            return(
-              <div key={ index }>
-                <Image
-                  src={ url }
-                  alt="alt"
-                />
-              </div>
-            );
-          } ) }
-        </div>
+        { /* IMAGES */ }
+        { imageUrlsToDisplay?.length > 0 && (
+          <div className="flex gap-5 col-span-3">
+            { imageUrlsToDisplay?.map( ( url : any, index : number ) => {
+              return (
+                <div
+                  key={ index }
+                  className="flex flex-col gap-2 border p-4 border-gray-300 items-center justify-between relative"
+                >
+                  <div className="wrapper-image relative w-[70px] h-[70px]">
+                    <Image
+                      src={ url }
+                      alt="alt"
+                      fill
+                      className="object-contain"
+                    />
+                  </div>
+                  <button
+                    className="text-sm underline cursor-pointer absolute top-[0px] right-[0px]"
+                    onClick={ () => onSelectedImageDelete( index ) }
+                    type="button"
+                  >
+                    <X
+                      color="red"
+                      size={ 24 }
+                    />
+                  </button>
+                </div>
+              );
+            } ) }
+          </div>
+        ) }
 
-        <Button
-          type="submit"
-          className="col-span-3"
-        >
-          Submit
-        </Button>
+        { existingProductImages?.length > 0 && (
+          <div className="flex gap-5 col-span-3">
+            { existingProductImages?.map( ( url : any, index : number ) => {
+              return (
+                <div
+                  key={ index }
+                  className="flex flex-col gap-2 border p-4 border-gray-300 items-center justify-between relative"
+                >
+                  <div className="wrapper-image relative w-[70px] h-[70px]">
+                    <Image
+                      src={ url }
+                      alt="alt"
+                      fill
+                      className="object-contain"
+                    />
+                  </div>
+                  <button
+                    className="text-sm underline cursor-pointer absolute top-[0px] right-[0px]"
+                    onClick={ () => onExistingImageDelete( index ) }
+                    type="button"
+                  >
+                    <X
+                      color="red"
+                      size={ 24 }
+                    />
+                  </button>
+                </div>
+              );
+            } ) }
+          </div>
+        ) }
+
+        <div className="col-span-3 flex justify-between">
+          <Button
+            asChild
+            variant="outline"
+          >
+            <Link href="/seller/products" >Back</Link>
+          </Button>
+          <Button
+            type="submit"
+            className="w-[300px]"
+            disabled={ loading }
+          >
+            { formType === 'add' ? 'Add Product' : 'Update Product' }
+          </Button>
+        </div>
       </form>
     </Form>
   );
