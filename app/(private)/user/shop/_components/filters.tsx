@@ -2,6 +2,7 @@
 
 import React, { useState, } from 'react';
 
+import { Button, } from '@/components/ui/button';
 import { Input, } from '@/components/ui/input';
 import { Label, } from '@/components/ui/label';
 import {
@@ -11,14 +12,15 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { productCategories, } from '@/constants';
+import { productCategories, sortByOptions, } from '@/constants';
 function Filters() {
   const [ search, setSearch, ] = useState( '' );
   const [ category, setCategory, ] = useState( '' );
   const [ sortBy, setSortBy, ] = useState( '' );
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 items-end">
+
       <div className="flex flex-col gap-2">
         <Label>Search</Label>
         <Input
@@ -27,6 +29,7 @@ function Filters() {
           onChange={ ( e ) => setSearch( e.target.value ) }
         />
       </div>
+
       <div className="flex flex-col gap-2">
         <Label>Category</Label>
         <Select
@@ -46,6 +49,35 @@ function Filters() {
           </SelectContent>
         </Select>
       </div>
+
+      <div className="flex flex-col gap-2">
+        <Label>Sort By</Label>
+        <Select
+          onValueChange={ ( value ) => setCategory( value ) }
+          defaultValue={ category }
+        >
+          <SelectTrigger>
+            <SelectValue placeholder="Sory by" />
+          </SelectTrigger>
+          <SelectContent>
+            { sortByOptions.map( ( option : {
+              label : string;
+              value : string
+            } ) => (
+              <SelectItem
+                key={ option?.value }
+                value={ option?.value }
+              >{ option.label }</SelectItem>
+            ) ) }
+          </SelectContent>
+        </Select>
+      </div>
+
+      <div className="grid grid-cols-2 gap-4">
+        <Button variant="outline">Reset</Button>
+        <Button>Apply</Button>
+      </div>
+
     </div>
   );
 }
