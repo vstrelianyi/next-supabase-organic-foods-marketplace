@@ -11,7 +11,7 @@ export interface IUser{
 }
 
 export interface IProduct{
-  id : string;
+  id : number;
   seller_id : string;
   name : string;
   category : string;
@@ -19,4 +19,9 @@ export interface IProduct{
   stock : number;
   description : string;
   created_at : string;
+  images : string[];
+
+  // runtime date
+  user_profiles : IUser;
+  quantity : number;
 }

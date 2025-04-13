@@ -1,22 +1,21 @@
 'use client';
 
-import { Button, } from '@/components/ui/button';
-import Link from 'next/link';
+import {
+  SignIn,
+  SignUp,
+} from '@clerk/nextjs';
 import Image from 'next/image';
+import Link from 'next/link';
+import { useSearchParams, } from 'next/navigation';
 import React, { useState, } from 'react';
 
+import { Button, } from '@/components/ui/button';
 import {
   Sheet,
   SheetContent,
   SheetHeader,
   SheetTitle,
 } from '@/components/ui/sheet';
-
-import {
-  SignIn,
-  SignUp,
-} from '@clerk/nextjs';
-import { useSearchParams, } from 'next/navigation';
 
 function PageHome() {
   const menuItems = [

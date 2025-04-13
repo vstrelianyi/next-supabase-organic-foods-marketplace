@@ -8,6 +8,7 @@ export const addNewProduct = async( payload : any ) => {
     if ( error ) {
       throw new Error( error.message );
     }
+
     return {
       success: true,
       message: 'Product added successfully',
@@ -27,6 +28,7 @@ export const editProductById = async( productId : string, payload : any ) => {
     if ( error ) {
       throw new Error( error.message );
     }
+
     return {
       success: true,
       message: 'Product updated successfully',
@@ -47,6 +49,7 @@ export const getProductsBySellerId = async( sellerId : string ) => {
     if ( error ) {
       throw new Error( error.message );
     }
+
     return {
       success: true,
       data: data,
@@ -66,6 +69,7 @@ export const getProductById = async( id : string ) => {
     if ( error ) {
       throw new Error( error.message );
     }
+
     return {
       success: true,
       data: data,
@@ -85,9 +89,33 @@ export const deleteProductById = async( productId : string ) => {
     if ( error ) {
       throw new Error( error.message );
     }
+
     return {
       success: true,
       message: 'Product deleted successfully',
+    };
+  } catch ( error : any ) {
+    return {
+      success: false,
+      message: error.message,
+    };
+  }
+};
+
+export const getAllProducts = async( { category, searchText, sortBy, } : {
+  category : string,
+  searchText : string,
+  sortBy : string,
+} ) => {
+  try {
+    const { data, error, } = await supabase.from( 'products' ).select( '*, user_profiles(name)' );
+    if ( error ) {
+      throw new Error( error.message );
+    }
+
+    return {
+      success: true,
+      data: data,
     };
   } catch ( error : any ) {
     return {

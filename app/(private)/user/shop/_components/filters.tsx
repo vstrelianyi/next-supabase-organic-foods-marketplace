@@ -1,0 +1,53 @@
+'use client';
+
+import React, { useState, } from 'react';
+
+import { Input, } from '@/components/ui/input';
+import { Label, } from '@/components/ui/label';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
+import { productCategories, } from '@/constants';
+function Filters() {
+  const [ search, setSearch, ] = useState( '' );
+  const [ category, setCategory, ] = useState( '' );
+  const [ sortBy, setSortBy, ] = useState( '' );
+
+  return (
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+      <div className="flex flex-col gap-2">
+        <Label>Search</Label>
+        <Input
+          type="text"
+          value={ search }
+          onChange={ ( e ) => setSearch( e.target.value ) }
+        />
+      </div>
+      <div className="flex flex-col gap-2">
+        <Label>Category</Label>
+        <Select
+          onValueChange={ ( value ) => setCategory( value ) }
+          defaultValue={ category }
+        >
+          <SelectTrigger>
+            <SelectValue placeholder="Select a verified email to display" />
+          </SelectTrigger>
+          <SelectContent>
+            { productCategories.map( ( category ) => (
+              <SelectItem
+                key={ category?.value }
+                value={ category?.value }
+              >{ category.label }</SelectItem>
+            ) ) }
+          </SelectContent>
+        </Select>
+      </div>
+    </div>
+  );
+}
+
+export default Filters;

@@ -18,8 +18,9 @@ import {
   TableRow,
 } from '@/components/ui/table';
 import TitlePage from '@/components/ui/title-page';
-import { IProduct, } from '@/interfaces';
 import usersStore, { IUsersStore, } from '@/store/store-users';
+
+import { IProduct, } from '@/interfaces';
 
 function PageSellerProducts() {
   const { user, } = usersStore() as IUsersStore;
@@ -164,7 +165,7 @@ function PageSellerProducts() {
                     </Button>
                     <Button
                       variant="secondary"
-                      onClick={ () => deleteProductHandler( product.id ) }
+                      onClick={ () => deleteProductHandler( product.id.toString() ) }
                     >
                       <Trash
                         color="red"

@@ -4,7 +4,8 @@ import { fileURLToPath, } from 'url';
 import { FlatCompat, } from '@eslint/eslintrc';
 import stylistic from '@stylistic/eslint-plugin';
 import importPlugin from 'eslint-plugin-import';
-// import customPlugin from './rules/object-max-pairs-per-line.js';
+
+import localPlugin from './rules/index.mjs';
 const __filename = fileURLToPath( import.meta.url );
 const __dirname = dirname( __filename );
 const compat = new FlatCompat( {
@@ -17,7 +18,11 @@ const eslintConfig = [
     plugins: {
       '@stylistic': stylistic,
       'import': importPlugin,
-      // 'custom': customPlugin,
+      'local': localPlugin,
+    },
+    // custom rules
+    rules: {
+      'local/single-space-classname': 'error',
     },
   },
   {
@@ -32,7 +37,19 @@ const eslintConfig = [
     rules: {
       // Import sorting rules
       'import/order': [ 'error', {
-        'groups': [ 'builtin', 'external', 'internal', 'parent', 'sibling', 'index', ],
+        'groups': [ 'builtin', 'external', 'internal', 'parent', 'sibling', 'index', 'type', ],
+        'pathGroups': [
+          {
+            'pattern': '@/interfaces{,/**}',
+            'group': 'type',
+            'position': 'after',
+          },
+          {
+            'pattern': '@/types{,/**}',
+            'group': 'type',
+            'position': 'after',
+          },
+        ],
         'newlines-between': 'always',
         'alphabetize': {
           'order': 'asc',
@@ -40,6 +57,14 @@ const eslintConfig = [
         },
       }, ],
       // jsx style formatting
+      'padding-line-between-statements': [
+        'error',
+        {
+          'blankLine': 'always',
+          'prev': '*',
+          'next': 'return',
+        },
+      ],
       'space-before-blocks': [ 'error', 'always', ],
       'keyword-spacing': [ 'error', { 'after': true, }, ],
 

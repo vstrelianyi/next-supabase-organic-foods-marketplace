@@ -1,4 +1,4 @@
-const LayoutPublic = ( { children, }: { children: React.ReactNode } ) => {
+const LayoutPublic = ( { children, } : { children : React.ReactNode } ) => {
   return (
     <div className="p-5">
       { children }

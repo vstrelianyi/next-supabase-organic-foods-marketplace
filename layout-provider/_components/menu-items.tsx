@@ -1,23 +1,21 @@
-
+import { useAuth, } from '@clerk/nextjs';
+import clsx from 'clsx';
+import { Gem, LayoutDashboardIcon, List, ListCheck, MapIcon, ShoppingBag, ShoppingCart, User2, Circle, } from 'lucide-react';
+import Link from 'next/link';
+import { usePathname, } from 'next/navigation';
+import { useRouter, } from 'next/navigation';
 import React, { useMemo, useState, } from 'react';
+import toast from 'react-hot-toast';
 
+import { Button, } from '@/components/ui/button';
+import { Label, } from '@/components/ui/label';
+import { RadioGroup, RadioGroupItem, } from '@/components/ui/radio-group';
 import {
   Sheet,
   SheetContent,
   SheetHeader,
   SheetTitle,
 } from '@/components/ui/sheet';
-import { Gem, LayoutDashboardIcon, List, ListCheck, MapIcon, ShoppingBag, ShoppingCart, User2, Circle, } from 'lucide-react';
-import Link from 'next/link';
-import { usePathname, } from 'next/navigation';
-import clsx from 'clsx';
-
-import { RadioGroup, RadioGroupItem, } from '@/components/ui/radio-group';
-import { Label, } from '@/components/ui/label';
-import { Button, } from '@/components/ui/button';
-import { useAuth, } from '@clerk/nextjs';
-import toast from 'react-hot-toast';
-import { useRouter, } from 'next/navigation';
 
 interface IMenuItems{
   openMenuItems : boolean;
@@ -29,6 +27,8 @@ function MenuItems( { openMenuItems, setOpenMenuItems, } : IMenuItems ) {
   const [ selectedRole, setSelectedRole, ] = useState( 'user' );
   const [ loading, setLoading, ] = useState( false );
   const { signOut, } = useAuth();
+  const pathName = usePathname();
+
   const handleSignOut = async() => {
     try {
       setLoading( true );
@@ -56,7 +56,6 @@ function MenuItems( { openMenuItems, setOpenMenuItems, } : IMenuItems ) {
       value: 'admin',
     },
   ];
-  const pathName = usePathname();
   const iconSize = 20;
 
   const manuItemsToRender = useMemo( () => {
@@ -138,7 +137,11 @@ function MenuItems( { openMenuItems, setOpenMenuItems, } : IMenuItems ) {
 
       <Sheet
         open={ openMenuItems }
-        onOpenChange={ setOpenMenuItems }
+        onOpenChange={ ( open ) => {
+          if ( !open ) {
+            setOpenMenuItems( false );
+          }
+        } }
       >
         <SheetContent className="min-w-[600px] bg-white flex items-center justify-start gap-0">
           <SheetHeader>
@@ -182,6 +185,7 @@ function MenuItems( { openMenuItems, setOpenMenuItems, } : IMenuItems ) {
                 <Link
                   key={ item?.route }
                   href={ item?.route }
+                  onClick={ () => setOpenMenuItems( false ) }
                   className={ clsx( 'flex items-center', pathName === item?.route && 'text-ring' ) }
                 >
                   <span className="mr-2">

@@ -268,6 +268,38 @@ function FormProduct( { formType = 'add', initialValues = {}, } : TFormProduct )
           ) }
         />
 
+        { existingProductImages?.length > 0 && (
+          <div className="flex gap-5 col-span-3">
+            { existingProductImages?.map( ( url : any, index : number ) => {
+              return (
+                <div
+                  key={ index }
+                  className="flex flex-col gap-2 border p-4 border-gray-300 items-center justify-between relative"
+                >
+                  <div className="wrapper-image relative w-[70px] h-[70px]">
+                    <Image
+                      src={ url }
+                      alt="alt"
+                      fill
+                      className="object-contain"
+                    />
+                  </div>
+                  <button
+                    className="text-sm underline cursor-pointer absolute top-[0px] right-[0px]"
+                    onClick={ () => onExistingImageDelete( index ) }
+                    type="button"
+                  >
+                    <X
+                      color="red"
+                      size={ 24 }
+                    />
+                  </button>
+                </div>
+              );
+            } ) }
+          </div>
+        ) }
+
         <Input
           className="col-span-3"
           placeholder="Select product images"
@@ -299,38 +331,6 @@ function FormProduct( { formType = 'add', initialValues = {}, } : TFormProduct )
                   <button
                     className="text-sm underline cursor-pointer absolute top-[0px] right-[0px]"
                     onClick={ () => onSelectedImageDelete( index ) }
-                    type="button"
-                  >
-                    <X
-                      color="red"
-                      size={ 24 }
-                    />
-                  </button>
-                </div>
-              );
-            } ) }
-          </div>
-        ) }
-
-        { existingProductImages?.length > 0 && (
-          <div className="flex gap-5 col-span-3">
-            { existingProductImages?.map( ( url : any, index : number ) => {
-              return (
-                <div
-                  key={ index }
-                  className="flex flex-col gap-2 border p-4 border-gray-300 items-center justify-between relative"
-                >
-                  <div className="wrapper-image relative w-[70px] h-[70px]">
-                    <Image
-                      src={ url }
-                      alt="alt"
-                      fill
-                      className="object-contain"
-                    />
-                  </div>
-                  <button
-                    className="text-sm underline cursor-pointer absolute top-[0px] right-[0px]"
-                    onClick={ () => onExistingImageDelete( index ) }
                     type="button"
                   >
                     <X

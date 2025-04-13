@@ -1,13 +1,14 @@
-import { IUser, } from '@/interfaces';
 import { create, } from 'zustand';
+
+import { IUser, } from '@/interfaces';
 
 const usersStore = create( ( set ) => ( {
   user: 0,
-  setUser: ( user: IUser ) => set( { user, } ),
+  setUser: ( user : IUser ) => set( { user, } ),
 } ) );
 export default usersStore;
 
 export interface IUsersStore {
-  user: IUser,
-  setUser: ( user: IUser )=> void
+  user : IUser,
+  setUser : ( user : IUser ) => void
 }

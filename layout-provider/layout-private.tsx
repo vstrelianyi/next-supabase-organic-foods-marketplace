@@ -1,11 +1,13 @@
 import { useEffect, useState, } from 'react';
-import Header from './components/header';
 import toast from 'react-hot-toast';
+
 import { getCurrentUserFromSupabase, } from '@/actions/users';
 import Spinner from '@/components/ui/spinner';
 import usersStore, { IUsersStore, } from '@/store/store-users';
 
-const LayoutPrivate = ( { children, }: { children: React.ReactNode } ) => {
+import Header from './_components/header';
+
+const LayoutPrivate = ( { children, } : { children : React.ReactNode } ) => {
   const { user, setUser, } = usersStore() as IUsersStore;
   const [ loading, setLoading, ] = useState( false );
 
@@ -15,27 +17,28 @@ const LayoutPrivate = ( { children, }: { children: React.ReactNode } ) => {
         setLoading( true );
         const response = await getCurrentUserFromSupabase();
         // console.log( response );
-        if( !response.success ){
+        if ( !response.success ) {
           toast.error( 'Error while fetching user' );
-        } else{
+        } else {
           setUser( response.data?.[0] );
         }
       } catch ( error ) {
         toast.error( 'Error while fetching user' );
-      } finally{
+      } finally {
         setLoading( false );
       }
     };
-    if( !user ){
+    if ( !user ) {
       fetchUser();
     }
   }, [ user, setUser, ] );
 
-  if( loading ){
+  if ( loading ) {
     return (
       <Spinner/>
     );
   }
+
   return (
     <div>
       <Header user={ user! }/>

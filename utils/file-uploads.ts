@@ -1,7 +1,8 @@
 'use server';
 
-import supabase from '@/config/supabase';
 import dayjs from 'dayjs';
+
+import supabase from '@/config/supabase';
 
 export const uploadFileAndGetUrl = async ( file : File ) => {
   try {
@@ -16,6 +17,7 @@ export const uploadFileAndGetUrl = async ( file : File ) => {
       throw new Error( error.message );
     }
     const { data : urlResponse, } = await supabase.storage.from( 'default' ).getPublicUrl( fileName );
+
     return {
       success: true,
       url: urlResponse.publicUrl,
