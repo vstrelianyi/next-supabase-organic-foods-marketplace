@@ -1,7 +1,6 @@
 'use client';
 
 import { zodResolver, } from '@hookform/resolvers/zod';
-import { Description, } from '@radix-ui/react-dialog';
 import { X, } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -55,15 +54,15 @@ function FormProduct( { formType = 'add', initialValues = {}, } : TFormProduct )
   const [ existingProductImages, setExistingProductImages, ] = useState<any[]>( initialValues?.images || [] );
   const [ loading, setLoading, ] = useState<boolean>( false );
 
-  const formSchemaProduct = z.object( {
+  const schemaFormProduct = z.object( {
     name: z.string().nonempty(),
     description: z.string().nonempty(),
     price: z.number().positive(),
     category: z.string().nonempty(),
     stock: z.number().positive(),
   } );
-  const form = useForm<z.infer<typeof formSchemaProduct>>( {
-    resolver: zodResolver( formSchemaProduct ),
+  const form = useForm<z.infer<typeof schemaFormProduct>>( {
+    resolver: zodResolver( schemaFormProduct ),
     defaultValues: {
       name: initialValues?.name || '',
       description: initialValues?.description || '',
@@ -73,7 +72,7 @@ function FormProduct( { formType = 'add', initialValues = {}, } : TFormProduct )
     },
   } );
 
-  async function onSubmit( values : z.infer<typeof formSchemaProduct> ) {
+  async function onSubmit( values : z.infer<typeof schemaFormProduct> ) {
     try {
       setLoading( true );
       const urls = [ ...existingProductImages, ];

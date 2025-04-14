@@ -25,3 +25,14 @@ export interface IProduct{
   user_profiles : IUser;
   quantity : number;
 }
+
+export interface IAddress{
+  id : string;
+  name : string;
+  email : string;
+  phone_number : string;
+  postal_code : string;
+  country : string;
+  city : string;
+  address : string;
+}

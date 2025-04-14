@@ -2,6 +2,7 @@
 
 import { Minus, Plus, } from 'lucide-react';
 import Image from 'next/image';
+import Link from 'next/link';
 import toast from 'react-hot-toast';
 
 import { Button, } from '@/components/ui/button';
@@ -154,9 +155,12 @@ function PageUserCart() {
             <Button
               variant="default"
               className="w-full"
+              asChild
               disabled={ items.length === 0 }
             >
-              <span>Proceed to Checkout</span>
+              <Link href="/user/checkout">
+                <span>Proceed to Checkout</span>
+              </Link>
             </Button>
           </div>
 
