@@ -6,11 +6,21 @@ import ProductCard from './_components/product-card';
 
 import { IProduct, } from '@/interfaces';
 
-export default async function PageUserShop() {
+interface IPageProps {
+  searchParams : Promise<{
+    searchText ?: string;
+    category ?: string;
+    sortBy ?: string;
+  }>;
+}
+
+export default async function PageUserShop( { searchParams, } : IPageProps ) {
+  const { searchText, category, sortBy, } = await searchParams;
+
   const response : any = await getAllProducts( {
-    category: '',
-    searchText: '',
-    sortBy: '',
+    searchText: searchText || '',
+    category: category || '',
+    sortBy: sortBy || '',
   } );
 
   if ( !response.success ) {

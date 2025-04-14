@@ -1,5 +1,6 @@
 'use client';
 
+import { useRouter, } from 'next/navigation';
 import React, { useState, } from 'react';
 
 import { Button, } from '@/components/ui/button';
@@ -13,14 +14,27 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { productCategories, sortByOptions, } from '@/constants';
+
 function Filters() {
   const [ search, setSearch, ] = useState( '' );
   const [ category, setCategory, ] = useState( '' );
   const [ sortBy, setSortBy, ] = useState( '' );
 
+  const router = useRouter();
+
+  const handleApplyFilters = () => {
+    router.push( `/user/shop?searchText=${ search }&category=${ category }&sortBy=${ sortBy }` );
+  };
+  const onResetFilters = () => {
+    setSearch( '' );
+    setCategory( '' );
+    setSortBy( '' );
+  };
+
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 items-end">
 
+      { /* SEARCH */ }
       <div className="flex flex-col gap-2">
         <Label>Search</Label>
         <Input
@@ -30,6 +44,7 @@ function Filters() {
         />
       </div>
 
+      { /* CATEGORY */ }
       <div className="flex flex-col gap-2">
         <Label>Category</Label>
         <Select
@@ -37,7 +52,9 @@ function Filters() {
           defaultValue={ category }
         >
           <SelectTrigger>
-            <SelectValue placeholder="Select a verified email to display" />
+            <SelectValue
+              placeholder="Select a verified email to display"
+            />
           </SelectTrigger>
           <SelectContent>
             { productCategories.map( ( category ) => (
@@ -53,7 +70,7 @@ function Filters() {
       <div className="flex flex-col gap-2">
         <Label>Sort By</Label>
         <Select
-          onValueChange={ ( value ) => setCategory( value ) }
+          onValueChange={ ( value ) => setSortBy( value ) }
           defaultValue={ category }
         >
           <SelectTrigger>
@@ -74,8 +91,11 @@ function Filters() {
       </div>
 
       <div className="grid grid-cols-2 gap-4">
-        <Button variant="outline">Reset</Button>
-        <Button>Apply</Button>
+        <Button
+          variant="outline"
+          onClick={ onResetFilters }
+        >Reset</Button>
+        <Button onClick={ handleApplyFilters }>Apply</Button>
       </div>
 
     </div>

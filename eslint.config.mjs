@@ -62,6 +62,11 @@ const eslintConfig = [
         {
           'blankLine': 'always',
           'prev': '*',
+          'next': 'function',
+        },
+        {
+          'blankLine': 'always',
+          'prev': '*',
           'next': 'return',
         },
       ],
