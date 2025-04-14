@@ -29,6 +29,7 @@ function Filters() {
     setSearch( '' );
     setCategory( '' );
     setSortBy( '' );
+    router.push( '/user/shop' );
   };
 
   return (

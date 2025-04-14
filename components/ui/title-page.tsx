@@ -1,8 +1,8 @@
 import clsx from 'clsx';
 
-function TitlePage( { title, className, }: {
-  title: string,
-  className?: string
+function TitlePage( { title, className, } : {
+  title : string,
+  className ?: string
 } ) {
   return (
     <h1
