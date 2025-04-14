@@ -4,7 +4,7 @@ import { useForm, } from 'react-hook-form';
 import { toast, } from 'react-hot-toast';
 import { z, } from 'zod';
 
-import { addNewAddress, } from '@/actions/addresses';
+import { addNewAddress, updateAddressById, } from '@/actions/addresses';
 import { Button, } from '@/components/ui/button';
 import {
   Dialog,
@@ -34,6 +34,7 @@ interface FormAddressesProps {
   setOpenAddressForm : ( openAddressForm : boolean ) => void;
   initialValues ?: any;
   formType ?: 'add' | 'edit';
+  callback ?: () => void;
 }
 
 function FormAddresses( {
@@ -41,6 +42,7 @@ function FormAddresses( {
   setOpenAddressForm,
   initialValues,
   formType,
+  callback,
 } : FormAddressesProps ) {
   const [ loading, setLoading, ] = useState( false );
   const { user, } = usersStore() as IUsersStore;
@@ -70,18 +72,35 @@ function FormAddresses( {
   async function onSubmit( values : z.infer<typeof schemaFormAddress> ) {
     try {
       setLoading( true );
-      const { success, message, } = await addNewAddress( {
-        ...values,
-        user_id: user.id,
-      } );
-      if ( success ) {
-        toast.success( message );
-        setOpenAddressForm( false );
-        form.reset();
-      } else {
-        toast.error( message );
+
+      if ( formType === 'add' ) {
+        const { success, message, } = await addNewAddress( {
+          ...values,
+          user_id: user.id,
+        } );
+        if ( success ) {
+          toast.success( message );
+          setOpenAddressForm( false );
+          form.reset();
+          callback?.();
+        } else {
+          toast.error( message );
+        }
+      } else if ( formType === 'edit' ) {
+        console.log( values );
+        const { success, message, } = await updateAddressById( initialValues.id, values );
+        if ( success ) {
+          toast.success( message );
+          setOpenAddressForm( false );
+          form.reset();
+          callback?.();
+        } else {
+          toast.error( message );
+        }
       }
     } catch ( error ) {
+      console.error( error );
+      toast.error( 'Error submitting form' );
     } finally {
       setLoading( false );
     }

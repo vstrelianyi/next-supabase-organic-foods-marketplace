@@ -1,8 +1,9 @@
 'use client';
 
-import { useEffect, useState, } from 'react';
+import { useEffect, useState, useCallback, } from 'react';
+import toast from 'react-hot-toast';
 
-import { getAddressesByUserId, } from '@/actions/addresses';
+import { deleteAddressById, updateAddressById, getAddressesByUserId, } from '@/actions/addresses';
 import { Button, } from '@/components/ui/button';
 import Spinner from '@/components/ui/spinner';
 import TitlePage from '@/components/ui/title-page';
@@ -18,25 +19,31 @@ export default function PageUserAddresses() {
   const [ addresses, setAddresses, ] = useState( [] );
   const { user, } = usersStore() as IUsersStore;
   const [ loading, setLoading, ] = useState( false );
+  const [ addressToUpdate, setAddressToUpdate, ] = useState<IAddress | null>( null );
 
-  const fetchData = async() => {
+  const fetchData = useCallback( async() => {
+    if ( !user.id ) {
+      return;
+    }
     try {
       setLoading( true );
-      const response : any = await getAddressesByUserId( user.id );
+      const response : any = await getAddressesByUserId( user.id.toString() );
       if ( response.success ) {
         setAddresses( response.data );
       } else {
         throw new Error( response.message );
       }
-      setLoading( false );
     } catch ( error ) {
+      console.error( error );
+      toast.error( 'Error fetching addresses' );
+    } finally {
       setLoading( false );
     }
-  };
+  }, [ user.id, ] );
 
   useEffect( () => {
     fetchData();
-  }, [] );
+  }, [ user.id, fetchData, ] );
 
   const renderAddressProperty = ( label : string, value : string | number ) => {
     return (
@@ -47,11 +54,31 @@ export default function PageUserAddresses() {
     );
   };
 
+  const handleDeleteAddress = async( id : string ) => {
+    const response : any = await deleteAddressById( id );
+    if ( response.success ) {
+      toast.success( response.message );
+      await fetchData();
+    } else {
+      toast.error( response.message );
+    }
+  };
+
+  const handleUpdateAddress = ( address : IAddress ) => {
+    setOpenAddressForm( true );
+    setAddressToUpdate( address );
+  };
+
   return (
     <div>
       <div className="flex justify-between items-center mb-6">
         <TitlePage title="Addresses" />
-        <Button onClick={ () => setOpenAddressForm( true ) }>Add New Address</Button>
+        <Button
+          onClick={ () => {
+            setOpenAddressForm( true );
+            setAddressToUpdate( null );
+          } }
+        >Add New Address</Button>
       </div>
 
       { loading && <Spinner /> }
@@ -75,8 +102,14 @@ export default function PageUserAddresses() {
                 { renderAddressProperty( 'Address', address.address ) }
               </div>
               <div className="col-span-3 flex gap-2 justify-end">
-                <Button variant="outline">Edit</Button>
-                <Button variant="destructive">Delete</Button>
+                <Button
+                  variant="outline"
+                  onClick={ () => handleUpdateAddress( address ) }
+                >Edit</Button>
+                <Button
+                  variant="destructive"
+                  onClick={ () => handleDeleteAddress( address.id ) }
+                >Delete</Button>
               </div>
             </div>
           ) ) }
@@ -85,9 +118,11 @@ export default function PageUserAddresses() {
 
       { openAddressForm && (
         <FormAddresses
-          formType={ 'add' }
+          formType={ addressToUpdate ? 'edit' : 'add' }
           openAddressForm={ openAddressForm }
           setOpenAddressForm={ setOpenAddressForm }
+          initialValues={ addressToUpdate }
+          callback={ () => fetchData() }
         />
       ) }
     </div>

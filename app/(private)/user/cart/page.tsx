@@ -156,9 +156,11 @@ function PageUserCart() {
               variant="default"
               className="w-full"
               asChild
-              disabled={ items.length === 0 }
             >
-              <Link href="/user/checkout">
+              <Link
+                href="/user/checkout"
+                className={ items.length === 0 ? 'pointer-events-none opacity-50' : '' }
+              >
                 <span>Proceed to Checkout</span>
               </Link>
             </Button>

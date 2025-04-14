@@ -21,6 +21,45 @@ export const addNewAddress = async( payload : any ) => {
   }
 };
 
+export const updateAddressById = async( id : string, payload : any ) => {
+  try {
+    const { error, } = await supabase.from( 'addresses' ).update( payload )
+      .eq( 'id', id );
+    if ( error ) {
+      throw new Error( error.message );
+    }
+
+    return {
+      success: true,
+      message: 'Address updated successfully',
+    };
+  } catch ( error : any ) {
+    return {
+      success: false,
+      message: error.message,
+    };
+  }
+};
+
+export const deleteAddressById = async( id : string ) => {
+  try {
+    const { error, } = await supabase.from( 'addresses' ).delete()
+      .eq( 'id', id );
+    if ( error ) {
+      throw new Error( error.message );
+    }
+
+    return {
+      success: true,
+      message: 'Address deleted successfully',
+    };
+  } catch ( error : any ) {
+    return {
+      success: false,
+      message: error.message,
+    };
+  }
+};
 export const getAddressesByUserId = async( user_id : string ) => {
   try {
     const { data, error, } = await supabase.from( 'addresses' ).select( '*' )
