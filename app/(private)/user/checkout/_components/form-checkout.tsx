@@ -23,7 +23,7 @@ import {
 interface FormCheckoutProps {
   openCheckoutForm : boolean;
   setOpenCheckoutForm : ( openCheckoutForm : boolean ) => void;
-  onPaymentSuccess ?: () => void;
+  onPaymentSuccess ?: ( paymentId : string ) => void;
 }
 
 function FormCheckout( { openCheckoutForm, setOpenCheckoutForm, onPaymentSuccess, } : FormCheckoutProps ) {
@@ -46,18 +46,20 @@ function FormCheckout( { openCheckoutForm, setOpenCheckoutForm, onPaymentSuccess
       return;
     }
 
-    const { error, } = await stripe.confirmPayment( {
+    const result : any = await stripe.confirmPayment( {
       elements,
       redirect: 'if_required',
       // confirmParams: {
       // return_url: `${window.location.origin}/user/checkout/success`,
       // },
     } );
-    onPaymentSuccess?.();
 
-    if ( error ) {
-      setErrorMessage( error.message );
-      toast.error( error.message || '' );
+    if ( result.error ) {
+      setErrorMessage( result.error.message );
+      toast.error( result.error.message || '' );
+    } else {
+      toast.success( 'Payment successful' );
+      onPaymentSuccess?.( result.paymentIntent.id );
     }
     setLoading( false );
   };

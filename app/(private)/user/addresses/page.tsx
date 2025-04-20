@@ -122,7 +122,7 @@ export default function PageUserAddresses() {
           openAddressForm={ openAddressForm }
           setOpenAddressForm={ setOpenAddressForm }
           initialValues={ addressToUpdate }
-          callback={ () => fetchData() }
+          onSave={ () => fetchData() }
         />
       ) }
     </div>

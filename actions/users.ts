@@ -19,7 +19,8 @@ export const saveClerkUserToSupabase = async ( clerkUser : any ) => {
 
     const { data, error, } = await supabase.from( 'user_profiles' ).insert( [ supabaseUserObj, ] )
       .select( '*' )
-      .single();
+      .single()
+		;
     if ( error ) {
       throw new Error( error.message );
     }
@@ -60,6 +61,7 @@ export const getCurrentUserFromSupabase = async() => {
     if ( !newUserResponse?.success ) {
       throw new Error( newUserResponse?.message );
     }
+
     return {
       success: true,
       data: newUserResponse.data,

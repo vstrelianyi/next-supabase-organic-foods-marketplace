@@ -34,7 +34,7 @@ interface FormAddressesProps {
   setOpenAddressForm : ( openAddressForm : boolean ) => void;
   initialValues ?: any;
   formType ?: 'add' | 'edit';
-  callback ?: () => void;
+  onSave ?: () => void;
 }
 
 function FormAddresses( {
@@ -42,7 +42,7 @@ function FormAddresses( {
   setOpenAddressForm,
   initialValues,
   formType,
-  callback,
+  onSave,
 } : FormAddressesProps ) {
   const [ loading, setLoading, ] = useState( false );
   const { user, } = usersStore() as IUsersStore;
@@ -82,7 +82,7 @@ function FormAddresses( {
           toast.success( message );
           setOpenAddressForm( false );
           form.reset();
-          callback?.();
+          onSave?.();
         } else {
           toast.error( message );
         }
@@ -93,7 +93,7 @@ function FormAddresses( {
           toast.success( message );
           setOpenAddressForm( false );
           form.reset();
-          callback?.();
+          onSave?.();
         } else {
           toast.error( message );
         }

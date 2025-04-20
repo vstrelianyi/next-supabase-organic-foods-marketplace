@@ -16,7 +16,7 @@ import {
   SheetHeader,
   SheetTitle,
 } from '@/components/ui/sheet';
-
+import usersStore, { IUsersStore, } from '@/store/store-users';
 interface IMenuItems{
   openMenuItems : boolean;
   setOpenMenuItems : React.Dispatch<React.SetStateAction<boolean>>;
@@ -24,6 +24,7 @@ interface IMenuItems{
 
 function MenuItems( { openMenuItems, setOpenMenuItems, } : IMenuItems ) {
   const router = useRouter();
+  const { user, } = usersStore() as IUsersStore;
   const [ selectedRole, setSelectedRole, ] = useState( 'user' );
   const [ loading, setLoading, ] = useState( false );
   const { signOut, } = useAuth();
@@ -47,18 +48,27 @@ function MenuItems( { openMenuItems, setOpenMenuItems, } : IMenuItems ) {
       name: 'User',
       value: 'user',
     },
-    {
-      name: 'Seller',
-      value: 'seller',
-    },
-    {
-      name: 'Admin',
-      value: 'admin',
-    },
   ];
+  if ( user.is_seller ) {
+    userRoles.push(
+      {
+        name: 'Seller',
+        value: 'seller',
+      }
+
+    );
+  }
+  if ( user.is_admin ) {
+    userRoles.push(
+      {
+        name: 'Admin',
+        value: 'admin',
+      }
+    );
+  }
   const iconSize = 20;
 
-  const manuItemsToRender = useMemo( () => {
+  const menuItemsToRender = useMemo( () => {
     const userMenuItems = [
       {
         name: 'Shop',
@@ -131,6 +141,7 @@ function MenuItems( { openMenuItems, setOpenMenuItems, } : IMenuItems ) {
         return userMenuItems;
     }
   }, [ selectedRole, ] );
+
   return (
     <div>
       MenuItems
@@ -150,37 +161,41 @@ function MenuItems( { openMenuItems, setOpenMenuItems, } : IMenuItems ) {
             </SheetTitle>
           </SheetHeader>
           <div className="flex flex-col gap-2 items-start justify-center">
-            <h3 className="text-gray-500 text-sm">
-              Select role
-            </h3>
-            <RadioGroup
-              className="flex gap-6 mb-[20px]"
-              defaultValue="user"
-              onValueChange={ ( value ) => { setSelectedRole( value ); } }
-            >
-              { userRoles.map( ( item ) => {
-                return (
-                  <div
-                    className="flex items-center space-x-2"
-                    key={ item.value }
-                  >
-                    <RadioGroupItem
-                      value={ item.value }
-                      id={ item.value }
-                      className="cursor-pointer"
-                    />
-                    <Label
-                      htmlFor={ item.value }
-                      className="cursor-pointer"
-                    >
-                      { item.name }
-                    </Label>
-                  </div>
-                );
-              } ) }
-            </RadioGroup>
+            { userRoles?.length > 1 && (
+              <>
+                <h3 className="text-gray-500 text-sm">
+                  Select role
+                </h3>
+                <RadioGroup
+                  className="flex gap-6 mb-[20px]"
+                  defaultValue="user"
+                  onValueChange={ ( value ) => { setSelectedRole( value ); } }
+                >
+                  { userRoles.map( ( item ) => {
+                    return (
+                      <div
+                        className="flex items-center space-x-2"
+                        key={ item.value }
+                      >
+                        <RadioGroupItem
+                          value={ item.value }
+                          id={ item.value }
+                          className="cursor-pointer"
+                        />
+                        <Label
+                          htmlFor={ item.value }
+                          className="cursor-pointer"
+                        >
+                          { item.name }
+                        </Label>
+                      </div>
+                    );
+                  } ) }
+                </RadioGroup>
+              </>
+            ) }
 
-            { manuItemsToRender.map( ( item ) => {
+            { menuItemsToRender.map( ( item ) => {
               return (
                 <Link
                   key={ item?.route }
@@ -205,6 +220,7 @@ function MenuItems( { openMenuItems, setOpenMenuItems, } : IMenuItems ) {
               Sign out
             </Button>
           </div>
+
         </SheetContent>
       </Sheet>
     </div>

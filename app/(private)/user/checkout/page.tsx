@@ -11,6 +11,7 @@ import { useEffect, useState, } from 'react';
 import toast from 'react-hot-toast';
 
 import { getAddressesByUserId, } from '@/actions/addresses';
+import { saveOrderAndOrderItems, } from '@/actions/orders';
 import { getStripePaymentIntentToken, } from '@/actions/payments';
 import { Button, } from '@/components/ui/button';
 import TitlePage from '@/components/ui/title-page';
@@ -96,11 +97,35 @@ function PageCheckout() {
     clientSecret: paymentIntentToken,
   };
 
-  const onPaymentSuccess = () => {
-    toast.success( 'Payment successful' );
-    setOpenCheckoutForm( false );
-    router.push( '/user/checkout/success' );
-    clearCart();
+  const onPaymentSuccess = async( paymentId : string ) => {
+    try {
+      const payload = {
+        orderPayload: {
+          customer_id: user.id,
+          payment_id: paymentId,
+          address_id: selectedAddress?.id,
+          sub_total: subTotal,
+          tax_shipping_fee: deliveryFee,
+          total: total,
+          order_status: 'order_placed',
+        },
+        items,
+      };
+
+      const response : any = await saveOrderAndOrderItems( payload );
+      if ( !response.success ) {
+        toast.error( 'Failed to save order' );
+
+        return;
+      }
+
+      toast.success( 'Order placed successfully' );
+      router.push( '/user/checkout/success' );
+      setOpenCheckoutForm( false );
+      clearCart();
+    } catch ( error ) {
+      toast.error( 'Failed to save order' );
+    }
   };
 
   return (
@@ -160,7 +185,7 @@ function PageCheckout() {
         <FormAddresses
           openAddressForm={ openAddressForm }
           setOpenAddressForm={ setOpenAddressForm }
-          callback={ () => setReloadAddresses( true ) }
+          onSave={ () => setReloadAddresses( true ) }
         />
       ) }
 

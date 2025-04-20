@@ -26,7 +26,7 @@ export default async function PageUserShop( { searchParams, } : IPageProps ) {
   if ( !response.success ) {
     return <div>{ response.message }</div>;
   }
-  console.log( 'response', response.data );
+  // console.log( 'PageUserShop -> response', response.data );
 
   return (
     <div className="flex flex-col gap-4">

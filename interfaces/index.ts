@@ -36,3 +36,34 @@ export interface IAddress{
   city : string;
   address : string;
 }
+
+export interface IOrder{
+  id : string;
+  created_at : string;
+  order_id : string;
+  seller_id : string;
+  name : string;
+  price : number;
+  quantity : number;
+  image : string;
+  product_id : string;
+  total : number;
+}
+
+export interface IOrderItem {
+  id : string;
+  sub_total : number;
+  tax_shipping_fee : number;
+  total : number;
+  payment_id : string;
+  order_status : string;
+  addresses : IAddress;
+  order_items : {
+    name : string;
+    price : number;
+    quantity : number;
+    total : number;
+    image : string;
+  }[];
+  created_at : string;
+}
