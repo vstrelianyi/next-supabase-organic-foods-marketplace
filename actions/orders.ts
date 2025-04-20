@@ -120,3 +120,44 @@ export const cancelOrderById = async( orderId : string, paymentId : string ) => 
     };
   }
 };
+
+export const getAllOrders = async() => {
+  try {
+    const { data, error, } = await supabase.from( 'orders' ).select( '*, order_items( * ), addresses( * ), user_profiles( * )' );
+    if ( error ) {
+      throw new Error( error.message );
+    }
+
+    return {
+      success: true,
+      data,
+    };
+  } catch ( error : any ) {
+    return {
+      success: false,
+      message: error.message,
+    };
+  }
+};
+
+export const markOrderAsDeliveredById = async( orderId : string ) => {
+  try {
+    const { data, error, } = await supabase.from( 'orders' ).update( {
+      order_status: 'delivered',
+    } )
+      .eq( 'id', orderId );
+    if ( error ) {
+      throw new Error( error.message );
+    }
+
+    return {
+      success: true,
+      message: 'Order marked as delivered',
+    };
+  } catch ( error : any ) {
+    return {
+      success: false,
+      message: error.message,
+    };
+  }
+};

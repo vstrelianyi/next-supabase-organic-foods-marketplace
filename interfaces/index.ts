@@ -58,6 +58,7 @@ export interface IOrderItem {
   payment_id : string;
   order_status : string;
   addresses : IAddress;
+  user_profiles : IUser;
   order_items : {
     name : string;
     price : number;

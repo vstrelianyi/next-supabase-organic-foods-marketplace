@@ -2,9 +2,11 @@ import dayjs from 'dayjs';
 import { useState, } from 'react';
 import toast from 'react-hot-toast';
 
-import { cancelOrderById, } from '@/actions/orders';
+import { cancelOrderById, markOrderAsDeliveredById, } from '@/actions/orders';
 import { Button, } from '@/components/ui/button';
 import { DialogHeader, Dialog, DialogContent, DialogTitle, } from '@/components/ui/dialog';
+import { IUsersStore, } from '@/store/store-users';
+import usersStore from '@/store/store-users';
 
 import { IOrderItem, } from '@/interfaces';
 
@@ -16,6 +18,7 @@ interface IOrderDetailsProps {
 
 function OrderDetails( { selectedOrder, setSelectedOrder, reloadData, } : IOrderDetailsProps ) {
   const [ loading, setLoading, ] = useState( false );
+  const { user, } = usersStore() as IUsersStore;
   const renderOrderProperty = ( key : string, value : any ) => {
     return (
       <div className="flex flex-col gap-2">
@@ -33,6 +36,24 @@ function OrderDetails( { selectedOrder, setSelectedOrder, reloadData, } : IOrder
         setSelectedOrder( null );
         toast.success( response.message );
         reloadData?.();
+      } else {
+        toast.error( response.message );
+      }
+    } catch ( error : any ) {
+      toast.error( error.message );
+    } finally {
+      setLoading( false );
+    }
+  };
+
+  const markAsDeliveredHandler = async() => {
+    try {
+      setLoading( true );
+      const response : any = await markOrderAsDeliveredById( selectedOrder.id );
+      if ( response.success ) {
+        toast.success( response.message );
+        reloadData?.();
+        setSelectedOrder( null );
       } else {
         toast.error( response.message );
       }
@@ -63,11 +84,21 @@ function OrderDetails( { selectedOrder, setSelectedOrder, reloadData, } : IOrder
         <hr className="my-4 border-gray-400"></hr>
         <div className="flex justify-end gap-4">
           { selectedOrder.order_status === 'order_placed' && (
-            <Button
-              disabled={ loading }
-              variant="outline"
-              onClick={ cancelOrderHandler }
-            >Cancel order</Button>
+            <div className="flex gap-5">
+              <Button
+                disabled={ loading }
+                variant="outline"
+                onClick={ cancelOrderHandler }
+              >Cancel order</Button>
+              { user.is_admin && (
+                <Button
+                  disabled={ loading }
+                  variant="outline"
+                  onClick={ markAsDeliveredHandler }
+                >Mark as delivered</Button>
+              ) }
+            </div>
+
           ) }
           <Button
             variant="default"
