@@ -5,7 +5,7 @@ import { currentUser, } from '@clerk/nextjs/server';
 import supabase from '@/config/supabase';
 
 export const saveClerkUserToSupabase = async ( clerkUser : any ) => {
-  console.log( 'saveClerkUserToSupabase -> clerkUser:', clerkUser );
+  // console.log( 'saveClerkUserToSupabase -> clerkUser:', clerkUser );
   try {
     const supabaseUserObj = {
       name: `${clerkUser.firstName} ${clerkUser.lastName}`,
@@ -65,6 +65,124 @@ export const getCurrentUserFromSupabase = async() => {
     return {
       success: true,
       data: newUserResponse.data,
+    };
+  } catch ( error : any ) {
+    return {
+      success: false,
+      message: error.message,
+    };
+  }
+};
+
+export const getAllUsers = async( { roleType = '', } : { roleType ?: string } ) => {
+  try {
+    const query = supabase.from( 'user_profiles' ).select( '*' )
+      .order( 'created_at', { ascending: false, } );
+
+    if ( roleType === 'seller' ) {
+      query
+        .eq( 'is_seller', true )
+        .neq( 'is_admin', true );
+    }
+
+    const { data, error, } = await query;
+
+    if ( error ) {
+      throw new Error( error.message );
+    }
+
+    return {
+      success: true,
+      data,
+    };
+  } catch ( error : any ) {
+    return {
+      success: false,
+      message: error.message,
+    };
+  }
+};
+
+export const updateUserStatus = async( userId : string, status : boolean ) => {
+  try {
+    const { data, error, } = await supabase.from( 'user_profiles' ).update( { is_active: status, } )
+      .eq( 'id', userId );
+    if ( error ) {
+      throw new Error( error.message );
+    }
+
+    return {
+      success: true,
+    };
+  } catch ( error : any ) {
+    return {
+      success: false,
+      message: error.message,
+    };
+  }
+};
+
+export const addSellerRole = async( email : string ) => {
+  try {
+    if ( !email ) {
+      throw new Error( 'Email is required' );
+    }
+    const { data: existingUser, error: userError, } = await supabase
+      .from( 'user_profiles' )
+      .select( '*' )
+      .eq( 'email', email )
+      .single()
+			;
+    console.log( 'addSeller -> existingUser:', existingUser );
+    console.log( 'addSeller -> userError:', userError );
+
+    if ( userError ) {
+      throw new Error( userError.message );
+    }
+    if ( !existingUser ) {
+      throw new Error( 'Seller not found' );
+    }
+    if ( existingUser?.is_seller ) {
+      throw new Error( 'User with this email already exists' );
+    } else {
+      const { data, error, } = await supabase.from( 'user_profiles' )
+        .update( {
+          is_seller: true,
+        } )
+        .eq( 'email', email );
+      if ( error ) {
+        throw new Error( error.message );
+      }
+
+      return {
+        success: true,
+        message: 'Seller added successfully',
+      };
+    }
+  } catch ( error : any ) {
+    return {
+      success: false,
+      message: error.message,
+    };
+  }
+};
+
+export const removeSellerRole = async( userId : string ) => {
+  console.log( userId );
+  try {
+    const { data, error, } = await supabase.from( 'user_profiles' )
+      .update( {
+        is_seller: false,
+      } )
+      .eq( 'id', userId );
+
+    if ( error ) {
+      throw new Error( error.message );
+    }
+
+    return {
+      success: true,
+      message: 'Seller role removed successfully',
     };
   } catch ( error : any ) {
     return {

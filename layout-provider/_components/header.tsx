@@ -11,7 +11,7 @@ import { IUser, } from '@/interfaces';
 // import Image from 'next/image';
 
 function Header( { user, } : { user : IUser } ) {
-  console.log( 'Header -> user:', user );
+  // console.log( 'Header -> user:', user );
   const [ openMenuItems, setOpenMenuItems, ] = useState( false );
 
   const { items, } = productCartStore() as IProductCartStore;
