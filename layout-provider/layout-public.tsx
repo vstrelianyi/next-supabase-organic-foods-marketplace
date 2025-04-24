@@ -1,6 +1,9 @@
+import Nav from '@/components/ui/nav';
+
 const LayoutPublic = ( { children, } : { children : React.ReactNode } ) => {
   return (
-    <div className="p-5">
+    <div className="LayoutPublic p-5 h-screen flex flex-col">
+      <Nav/>
       { children }
     </div>
   );

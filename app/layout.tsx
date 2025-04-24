@@ -1,4 +1,3 @@
-import type { Metadata, } from 'next';
 import './globals.css';
 import {
   ClerkProvider,
@@ -8,10 +7,13 @@ import {
   SignedOut,
   UserButton,
 } from '@clerk/nextjs';
-
 import { Roboto, } from 'next/font/google';
-import LayoutCustom from '@/layout-provider';
 import { Toaster, } from 'react-hot-toast';
+
+import LayoutCustom from '@/layout-provider';
+
+import type { Metadata, } from 'next';
+
 const roboto = Roboto ( {
   weight: [ '300', '400', '600', '700', ],
   style: [ 'normal', 'italic', ],

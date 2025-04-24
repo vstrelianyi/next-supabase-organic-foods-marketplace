@@ -5,7 +5,9 @@ import { FlatCompat, } from '@eslint/eslintrc';
 import stylistic from '@stylistic/eslint-plugin';
 import importPlugin from 'eslint-plugin-import';
 
+// custom rules
 import localPlugin from './rules/index.mjs';
+
 const __filename = fileURLToPath( import.meta.url );
 const __dirname = dirname( __filename );
 const compat = new FlatCompat( {
@@ -100,7 +102,7 @@ const eslintConfig = [
         'nonEmpty': 'tag-aligned',
         'selfClosing': 'tag-aligned',
       }, ],
-      // '@stylistic/jsx-one-expression-per-line': 'error',
+
       // 'custom/object-max-pairs-per-line': 'error',
       '@stylistic/max-len': [ 'error', {
         code: 220,
@@ -123,7 +125,7 @@ const eslintConfig = [
       'react/jsx-wrap-multilines': [ 'error', {
         'declaration': 'parens',
         'assignment': 'parens',
-        'return': 'parens',
+        'return': 'parens-new-line',
         'arrow': 'parens',
         'condition': 'parens',
         'logical': 'parens',
